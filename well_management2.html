@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ερωτηματολόγιο Αξιολόγησης (Βήμα-Βήμα)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        
+        /* Οθόνη έναρξης */
+        .start-screen {
+            display: block;
+            text-align: center;
+        }
+        .header-info {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .instructions {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .start-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background-color: #218838;
+        }
+        
+        /* Οθόνη ερωτηματολογίου */
+        .survey-screen {
+            display: none;
+        }
+        .question-block {
+            display: none;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .options-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        .options-group input[type="radio"] {
+            margin-right: 5px;
+        }
+        .options-group label {
+            font-weight: normal;
+        }
+        .feedback-area {
+            margin-top: 15px;
+        }
+        .comment-area {
+            display: none;
+        }
+        .comment-area label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: normal;
+            color: #555;
+        }
+        .comment-area textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .thanks-message {
+            display: none;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .navigation-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .navigation-buttons button {
+            width: 48%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #prevBtn {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        #prevBtn:hover {
+            background-color: #5a6268;
+        }
+        #nextBtn {
+            background-color: #007bff;
+            color: #fff;
+        }
+        #nextBtn:hover {
+            background-color: #0056b3;
+        }
+        #submitBtn {
+            background-color: #28a745;
+            color: #fff;
+            width: 100%;
+        }
+        #submitBtn:hover {
+            background-color: #218838;
+        }
+        #finalMessage {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #28a745;
+            font-weight: bold;
+            text-align: center;
+            padding: 30px;
+            background-color: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+        }
+        
+        /* Προστίθεται στυλ για τον progress indicator */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .question-counter {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Οθόνη έναρξης -->
+    <div class="start-screen" id="startScreen">
+        <h1>ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ ΑΞΙΟΛΟΓΗΣΗΣ ΕΚΔΗΛΩΣΗΣ</h1>
+        
+        <div class="header-info">
+            <label for="eventDate">Ημερομηνία:</label>
+            <input type="date" id="eventDate" name="eventDate">
+            <br><br>
+            <label for="eventTitle">Τίτλος Εκδήλωσης:</label>
+            <input type="text" id="eventTitle" name="eventTitle" style="width: 300px;">
+        </div>
+
+        <div class="instructions">
+            <h3>Οδηγίες</h3>
+            <p>Σας ευχαριστούμε που αφιερώνετε χρόνο για να αξιολογήσετε την εκδήλωσή μας!</p>
+            <p><strong>Πώς λειτουργεί:</strong></p>
+            <ul>
+                <li>Θα σας παρουσιαστούν 10 ερωτήσεις, μία κάθε φορά</li>
+                <li>Για κάθε ερώτηση, επιλέξτε μια βαθμολογία από 1 έως 5</li>
+                <li>Εάν βαθμολογήσετε κάτω από 5, θα σας ζητηθεί να αφήσετε ένα σχόλιο</li>
+                <li>Μπορείτε να επιστρέφετε στις προηγούμενες ερωτήσεις</li>
+                <li>Η συμπλήρωση διαρκεί περίπου 3-5 λεπτά</li>
+            </ul>
+            <p><strong>Κλίμακα αξιολόγησης:</strong></p>
+            <p style="background-color: #f8f9fa; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                <strong>1</strong> = Καθόλου ευχαριστημένος &nbsp;|&nbsp; 
+                <strong>2</strong> = Λίγο ευχαριστημένος &nbsp;|&nbsp; 
+                <strong>3</strong> = Μέτρια ευχαριστημένος &nbsp;|&nbsp; 
+                <strong>4</strong> = Πολύ ευχαριστημένος &nbsp;|&nbsp; 
+                <strong>5</strong> = Εξαιρετικά ευχαριστημένος
+            </p>
+        </div>
+        
+        <button class="start-button" id="startBtn">Έναρξη Ερωτηματολογίου</button>
+    </div>
+
+    <!-- Οθόνη ερωτηματολογίου -->
+    <div class="survey-screen" id="surveyScreen">
+        <h1>ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ ΑΞΙΟΛΟΓΗΣΗΣ</h1>
+        
+        <div class="question-counter" id="questionCounter">Ερώτηση 1 από 10</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <form id="evaluationForm">
+            <div class="question-block" id="q1" style="display: block;">
+                <div class="question-title">1. Πόσο ευχαριστημένος/η είσαι από τη συνολική εμπειρία της εκδήλωσης;</div>
+                <div class="options-group">
+                    <input type="radio" name="q1_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q1_rating" value="2"><label>2</label>
+                    <input type="radio" name="q1_rating" value="3"><label>3</label>
+                    <input type="radio" name="q1_rating" value="4"><label>4</label>
+                    <input type="radio" name="q1_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q1_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q2">
+                <div class="question-title">2. Πόσο ευχαριστημένος/η είσαι από την οργάνωση και το πρόγραμμα της εκδήλωσης;</div>
+                <div class="options-group">
+                    <input type="radio" name="q2_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q2_rating" value="2"><label>2</label>
+                    <input type="radio" name="q2_rating" value="3"><label>3</label>
+                    <input type="radio" name="q2_rating" value="4"><label>4</label>
+                    <input type="radio" name="q2_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q2_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+            
+            <div class="question-block" id="q3">
+                <div class="question-title">3. Πόσο ευχαριστημένος/η είσαι από την διάρκεια και τον ρυθμό της εκδήλωσης;</div>
+                <div class="options-group">
+                    <input type="radio" name="q3_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q3_rating" value="2"><label>2</label>
+                    <input type="radio" name="q3_rating" value="3"><label>3</label>
+                    <input type="radio" name="q3_rating" value="4"><label>4</label>
+                    <input type="radio" name="q3_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q3_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+            
+            <div class="question-block" id="q4">
+                <div class="question-title">4. Πόσο ευχαριστημένος/η είσαι από την ποιότητα του περιεχομένου ή των παρουσιάσεων;</div>
+                <div class="options-group">
+                    <input type="radio" name="q4_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q4_rating" value="2"><label>2</label>
+                    <input type="radio" name="q4_rating" value="3"><label>3</label>
+                    <input type="radio" name="q4_rating" value="4"><label>4</label>
+                    <input type="radio" name="q4_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q4_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q5">
+                <div class="question-title">5. Πόσο ευχαριστημένος/η είσαι από την επιλογή και την απόδοση των ομιλητών;</div>
+                <div class="options-group">
+                    <input type="radio" name="q5_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q5_rating" value="2"><label>2</label>
+                    <input type="radio" name="q5_rating" value="3"><label>3</label>
+                    <input type="radio" name="q5_rating" value="4"><label>4</label>
+                    <input type="radio" name="q5_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q5_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q6">
+                <div class="question-title">6. Πόσο ευχαριστημένος/η είσαι από το επίπεδο γνώσεων των ομιλητών;</div>
+                <div class="options-group">
+                    <input type="radio" name="q6_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q6_rating" value="2"><label>2</label>
+                    <input type="radio" name="q6_rating" value="3"><label>3</label>
+                    <input type="radio" name="q6_rating" value="4"><label>4</label>
+                    <input type="radio" name="q6_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q6_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q7">
+                <div class="question-title">7. Πόσο ευχαριστημένος/η είσαι από τον χώρο διεξαγωγής της εκδήλωσης;</div>
+                <div class="options-group">
+                    <input type="radio" name="q7_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q7_rating" value="2"><label>2</label>
+                    <input type="radio" name="q7_rating" value="3"><label>3</label>
+                    <input type="radio" name="q7_rating" value="4"><label>4</label>
+                    <input type="radio" name="q7_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q7_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q8">
+                <div class="question-title">8. Πόσο ευχαριστημένος/η είσαι από την τεχνική υποστήριξη της εκδήλωσης;</div>
+                <div class="options-group">
+                    <input type="radio" name="q8_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q8_rating" value="2"><label>2</label>
+                    <input type="radio" name="q8_rating" value="3"><label>3</label>
+                    <input type="radio" name="q8_rating" value="4"><label>4</label>
+                    <input type="radio" name="q8_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q8_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q9">
+                <div class="question-title">9. Πόσο ευχαριστημένος/η είσαι από την υποστήριξη και την εξυπηρέτηση από το προσωπικό;</div>
+                <div class="options-group">
+                    <input type="radio" name="q9_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q9_rating" value="2"><label>2</label>
+                    <input type="radio" name="q9_rating" value="3"><label>3</label>
+                    <input type="radio" name="q9_rating" value="4"><label>4</label>
+                    <input type="radio" name="q9_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q9_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="question-block" id="q10">
+                <div class="question-title">10. Πόσο ευχαριστημένος/η είσαι από την αξία σε σχέση με το κόστος συμμετοχής;</div>
+                <div class="options-group">
+                    <input type="radio" name="q10_rating" value="1" required><label>1</label>
+                    <input type="radio" name="q10_rating" value="2"><label>2</label>
+                    <input type="radio" name="q10_rating" value="3"><label>3</label>
+                    <input type="radio" name="q10_rating" value="4"><label>4</label>
+                    <input type="radio" name="q10_rating" value="5"><label>5</label>
+                </div>
+                <div class="feedback-area">
+                    <div class="comment-area">
+                        <label>Τι πιστεύετε ότι πρέπει να βελτιώσουμε σε αυτόν τον τομέα;</label>
+                        <textarea name="q10_comment"></textarea>
+                    </div>
+                    <div class="thanks-message">Ευχαριστούμε πολύ!</div>
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button type="button" id="prevBtn" style="display:none;">Προηγούμενο</button>
+                <button type="button" id="nextBtn">Επόμενο</button>
+                <button type="submit" id="submitBtn" style="display:none;">Υποβολή</button>
+            </div>
+        </form>
+
+        <div id="finalMessage">
+            <h2>Ευχαριστούμε για τη συμμετοχή σας</h2>
+            <p>Η αξιολόγησή σας είναι σημαντική για εμάς και θα μας βοηθήσει να βελτιώσουμε την ποιότητα των μελλοντικών μας εκδηλώσεων.</p>
+            <p>Εκτιμούμε τον χρόνο που διαθέσατε για τη συμπλήρωση του ερωτηματολογίου.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const startScreen = document.getElementById('startScreen');
+        const surveyScreen = document.getElementById('surveyScreen');
+        const startBtn = document.getElementById('startBtn');
+        const quizForm = document.getElementById('evaluationForm');
+        const questionBlocks = document.querySelectorAll('.question-block');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const finalMessage = document.getElementById('finalMessage');
+        const questionCounter = document.getElementById('questionCounter');
+        const progressFill = document.getElementById('progressFill');
+        
+        let currentQuestion = 0;
+        const totalQuestions = questionBlocks.length;
+
+        // Κουμπί έναρξης
+        startBtn.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            surveyScreen.style.display = 'block';
+            showQuestion(currentQuestion);
+        });
+
+        function showQuestion(index) {
+            questionBlocks.forEach((block, i) => {
+                block.style.display = i === index ? 'block' : 'none';
+            });
+
+            // Ενημέρωση μετρητή και progress bar
+            questionCounter.textContent = `Ερώτηση ${index + 1} από ${totalQuestions}`;
+            const progressPercentage = ((index + 1) / totalQuestions) * 100;
+            progressFill.style.width = progressPercentage + '%';
+
+            // Κουμπί "Προηγούμενο"
+            prevBtn.style.display = index > 0 ? 'block' : 'none';
+            
+            // Έλεγχος αν είμαστε στην τελευταία ερώτηση
+            if (index === totalQuestions - 1) {
+                nextBtn.textContent = 'Υποβολή';
+                nextBtn.style.backgroundColor = '#28a745';
+            } else {
+                nextBtn.textContent = 'Επόμενο';
+                nextBtn.style.backgroundColor = '#007bff';
+            }
+            
+            nextBtn.style.display = 'block';
+            submitBtn.style.display = 'none';
+        }
+
+        function handleRadioChange(event) {
+            const questionBlock = event.target.closest('.question-block');
+            const commentArea = questionBlock.querySelector('.comment-area');
+            const thanksMessage = questionBlock.querySelector('.thanks-message');
+            const selectedValue = parseInt(event.target.value);
+
+            if (selectedValue < 5) {
+                commentArea.style.display = 'block';
+                thanksMessage.style.display = 'none';
+            } else if (selectedValue === 5) {
+                commentArea.style.display = 'none';
+                thanksMessage.style.display = 'block';
+                commentArea.querySelector('textarea').value = ''; 
+            }
+        }
+
+        questionBlocks.forEach(block => {
+            const radioButtons = block.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', handleRadioChange);
+            });
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const currentQuestionBlock = questionBlocks[currentQuestion];
+            const selectedOption = currentQuestionBlock.querySelector('input[type="radio"]:checked');
+
+            if (!selectedOption) {
+                alert('Παρακαλώ επιλέξτε μια απάντηση για να συνεχίσετε.');
+                return;
+            }
+
+            // Αν είμαστε στην τελευταία ερώτηση, κάνουμε submit
+            if (currentQuestion === totalQuestions - 1) {
+                // Κρύψιμο φόρμας και εμφάνιση μηνύματος ευχαριστιών
+                document.querySelector('.survey-screen form').style.display = 'none';
+                finalMessage.style.display = 'block';
+                questionCounter.style.display = 'none';
+                document.querySelector('.progress-bar').style.display = 'none';
+                document.querySelector('.navigation-buttons').style.display = 'none';
+            } else {
+                // Πηγαίνουμε στην επόμενη ερώτηση
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+
+        quizForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Αυτό δεν θα χρησιμοποιηθεί πλέον
+        });
+    });
+</script>
+
+</body>
+</html>
