@@ -415,7 +415,7 @@
 
                     <div class="form-group">
                         <label for="industry">Industry/Κλάδος <span class="required">*</span></label>
-                        <select id="industry" name="industry" required>
+                        <select id="industry" name="industry" required onchange="toggleOtherIndustry()">
                             <option value="">Επιλέξτε κλάδο...</option>
                             <option value="technology">Τεχνολογία/IT</option>
                             <option value="finance">Χρηματοοικονομικά</option>
@@ -426,6 +426,11 @@
                             <option value="construction">Κατασκευές/Ακίνητα</option>
                             <option value="other">Άλλο</option>
                         </select>
+                    </div>
+
+                    <div class="form-group" id="otherIndustryGroup" style="display: none;">
+                        <label for="otherIndustry">Παρακαλώ διευκρινίστε τον κλάδο <span class="required">*</span></label>
+                        <input type="text" id="otherIndustry" name="otherIndustry" placeholder="π.χ. Αγροτεχνολογία, Logistics, κλπ.">
                     </div>
 
                     <div class="form-group">
@@ -960,6 +965,21 @@
         function hideAllSections() {
             for (let i = 1; i <= totalSteps; i++) {
                 document.getElementById(`section${i}`).classList.remove('active');
+            }
+        }
+
+        function toggleOtherIndustry() {
+            const industrySelect = document.getElementById('industry');
+            const otherIndustryGroup = document.getElementById('otherIndustryGroup');
+            const otherIndustryInput = document.getElementById('otherIndustry');
+            
+            if (industrySelect.value === 'other') {
+                otherIndustryGroup.style.display = 'block';
+                otherIndustryInput.required = true;
+            } else {
+                otherIndustryGroup.style.display = 'none';
+                otherIndustryInput.required = false;
+                otherIndustryInput.value = ''; // Clear the field when hidden
             }
         }
 
