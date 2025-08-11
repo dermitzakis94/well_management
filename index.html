@@ -855,7 +855,7 @@
             });
         }
 
-        // Alternative: Direct button click handler as backup
+        // Initialize the form
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
             updateStepIndicator();
@@ -868,29 +868,18 @@
                 if (submitBtn) {
                     submitBtn.addEventListener('click', function(e) {
                         e.preventDefault();
-                        alert('ΚΟΥΜΠΙ ΠΑΤΗΘΗΚΕ!');
                         
                         // Validate ALL fields across ALL steps
                         const validationResult = validateAllFields();
                         
                         if (!validationResult) {
-                            alert('Validation έδειξε προβλήματα - δεν προχωρώ!');
+                            alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία πριν υποβάλετε τη φόρμα.');
                             return;
                         }
                         
-                        alert('Validation OK! Θα δείξω ευχαριστήρια σελίδα...');
-                        
                         // Show success message
                         hideAllSections();
-                        
-                        const successMessage = document.getElementById('successMessage');
-                        
-                        if (successMessage) {
-                            successMessage.classList.add('show');
-                            alert('SUCCESS MESSAGE ΕΜΦΑΝΙΣΤΗΚΕ!');
-                        } else {
-                            alert('ΔΕΝ ΒΡΗΚΑ ΤΟ SUCCESS MESSAGE!');
-                        }
+                        document.getElementById('successMessage').classList.add('show');
                         
                         // Hide navigation and submit button
                         const stepNavigation = document.querySelector('.step-navigation');
@@ -914,17 +903,13 @@
         document.getElementById('chatbotForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            alert('Φόρμα υποβλήθηκε! Ελέγχω validation...'); // Debug
-            
             // Validate ALL fields across ALL steps
             const validationResult = validateAllFields();
             
             if (!validationResult) {
-                alert('Validation έδειξε προβλήματα - δεν προχωρώ!');
+                alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία πριν υποβάλετε τη φόρμα.');
                 return;
             }
-            
-            alert('Validation OK! Θα δείξω ευχαριστήρια σελίδα...'); // Debug
             
             // Collect form data
             const formData = new FormData(this);
@@ -937,15 +922,7 @@
             
             // Hide form and show success message
             hideAllSections();
-            
-            const successMessage = document.getElementById('successMessage');
-            
-            if (successMessage) {
-                successMessage.classList.add('show');
-                alert('SUCCESS MESSAGE ΕΜΦΑΝΙΣΤΗΚΕ!'); // Debug
-            } else {
-                alert('ΔΕΝ ΒΡΗΚΑ ΤΟ SUCCESS MESSAGE!');
-            }
+            document.getElementById('successMessage').classList.add('show');
             
             // Hide navigation and submit button
             const stepNavigation = document.querySelector('.step-navigation');
