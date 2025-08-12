@@ -1,0 +1,42 @@
+{
+  "submission": {
+    "timestamp": "2025-08-12T07:33:32.999Z",
+    "id": "chatbot_1754984012999"
+  },
+  "company": {
+    "name": "Prima Plora",
+    "industry": "εστίαση",
+    "size": "11-50",
+    "website": "https://www.primaplora.gr/en/",
+    "email": "dermitzakesbangeles@gmail.com",
+    "description": "είμαστε ένα εστιατόριο που προσφέρει υψηλή γαστρονομική εμπειρία στους πελάτες μας.Βρισκόμαστε στο υπέροχο Ρέθυμνο Κρήτης και για τους λάτρεις της gourmet κουζίνας προσφέρουμε πολύ δημιουργικά πίατα"
+  },
+  "evaluation": {
+    "type": "overall",
+    "specific_object": "Συνολική εμπείρια από το εστιατόριο",
+    "key_topics": [
+      "1) φαγητό 2)service 3) γαστρονομικές επιλογές 4) Ποικηλία κρασιών 5) Τοποθεσία και χώρος 6) κόστος με βάση την αξία"
+    ],
+    "questions": [
+      "1) Πόσο ευχαριστημένος είστε από την συνολική γαστρονομική εμπειρία που προσφέρει το εστιατόριο μας ;",
+      "2) Πόσο ευχαριστημένος είστε από την ποιότητα του φαγητού μας;",
+      "3) Πόσο ευχαριστημένος είστε από την δημιουργικότητα των πιάτων μας;",
+      "4) Πόσο ευχαριστημένος είστε από την τοποθεσία και τον χώρο μας;",
+      "5) Πόσο ευχαριστημένος είστε από την εξυπηρέτηση από το προσωπικό μας;",
+      "6) Πόσο ευχαριστημένος είστε από την ποικιλία των κρασιών μας",
+      "7) Πόσο ευχαριστημένος είστε από την τιμή με βάση την αξία"
+    ],
+    "rating_scale": "1-5",
+    "additional_comments_focus": "Ανάλογα με την βαθμολογία που έχει βάλει ο χρήστης θέλω να συλλέγω σχόλια για τι του άρεσε περισσότερο ή τι μπορούμε να βελτιώσουμε για να γίνουμε καλύτεροι"
+  },
+  "chatbot_style": {
+    "language": "greek",
+    "tone": "formal",
+    "personality": "professional"
+  },
+  "technical_specs": {
+    "expected_users": "201-500",
+    "duration": "1-month"
+  },
+  "generated_prompt": "```\nWelcome to Prima Plora's feedback session. We value your opinion and would like to gather your insights on your overall experience at our restaurant. Please take a few moments to answer the following questions, using a rating scale from 1 to 5, where 1 is the lowest and 5 is the highest. After each rating, you have the option to leave a comment. Let's begin.\n\n1. How satisfied are you with the overall gastronomic experience offered by our restaurant?\n2. How satisfied are you with the quality of our food?\n3. How satisfied are you with the creativity of our dishes?\n4. How satisfied are you with our location and ambiance?\n5. How satisfied are you with the service provided by our staff?\n6. How satisfied are you with the variety of our wine selection?\n7. How satisfied are you with the price in relation to the value?\n\nPlease provide a rating and any comments you have. After each response, I will ask a follow-up question based on your rating to understand your feedback better. Let's start with question one.\n\n[For each response: if rating > 4, say \"Great! We are excited!\"; if 2-4, say \"Thank you! It's good, but we can do better.\"; if < 2, say \"We are sorry you were not satisfied. Let's see how to improve.\"]\n\nFollow-up questions:\n- For high ratings: \"What did you like the most?\" or \"Why this high rating?\"\n- For medium ratings: \"What could we improve slightly?\" or \"Is there something specific you missed?\"\n- For low ratings: \"What was the main problem?\" or \"How can we make it better next time?\"\n\nOnce we have completed all questions, I will provide a summary of your responses.\n\nThank you for your time and feedback. Here is the summary of your responses:\n\nExporting JSON: { \"responses\": [{ \"question\": \"...\", \"rating\": ..., \"comment\": \"...\", \"follow_up\": \"...\" } for each], \"summary\": \"...\" }\n```"
+}
